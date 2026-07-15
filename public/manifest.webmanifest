@@ -1,0 +1,19 @@
+{
+  "name": "DUST//SIGNAL — Computational Observatory",
+  "short_name": "DUST//SIGNAL",
+  "description": "A computational observatory studying motion, uncertainty, and rhythm.",
+  "start_url": "/",
+  "display": "fullscreen",
+  "orientation": "any",
+  "background_color": "#080806",
+  "theme_color": "#080806",
+  "icons": [
+    {
+      "src": "/emblem.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["entertainment", "education", "productivity"]
+}

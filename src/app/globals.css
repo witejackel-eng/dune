@@ -1,0 +1,288 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ============================================================
+   DUST//SIGNAL — Visual System
+   Color palette per brief §5
+   ============================================================ */
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-display);
+  --font-mono: var(--font-mono);
+  --font-serif: var(--font-serif);
+
+  /* DUST//SIGNAL palette */
+  --color-carbon: #080806;
+  --color-mineral: #11110E;
+  --color-earth: #3A2417;
+  --color-sand: #A46C3B;
+  --color-dust: #D8C7A9;
+  --color-bone: #EEE7DA;
+  --color-amber: #D89A48;
+  --color-signal: #A43124;
+
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+}
+
+:root {
+  /* Square corners — brutalist */
+  --radius: 0px;
+
+  /* Base palette — DUST//SIGNAL */
+  --background: #080806;            /* carbon black */
+  --foreground: #EEE7DA;            /* bone white */
+  --card: #11110E;                  /* deep mineral */
+  --card-foreground: #EEE7DA;
+  --popover: #11110E;
+  --popover-foreground: #EEE7DA;
+  --primary: #D89A48;               /* instrument amber */
+  --primary-foreground: #080806;
+  --secondary: #1c1b16;
+  --secondary-foreground: #D8C7A9;
+  --muted: #1c1b16;
+  --muted-foreground: #8a7d63;
+  --accent: #3A2417;                /* burnt earth */
+  --accent-foreground: #D8C7A9;
+  --destructive: #A43124;           /* signal red */
+  --destructive-foreground: #EEE7DA;
+  --border: rgba(216, 199, 169, 0.12);
+  --input: rgba(216, 199, 169, 0.18);
+  --ring: #D89A48;
+
+  /* Force dark mode */
+  color-scheme: dark;
+}
+
+/* DUST//SIGNAL is permanently dark — no light theme override */
+
+@layer base {
+  * {
+    @apply border-border;
+    border-radius: 0 !important;
+  }
+  html, body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-feature-settings: "ss01", "ss02", "cv01", "cv03";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    overflow-x: hidden;
+    background-image:
+      radial-gradient(circle at 20% 10%, rgba(58, 36, 23, 0.18) 0%, transparent 45%),
+      radial-gradient(circle at 85% 90%, rgba(164, 108, 59, 0.06) 0%, transparent 50%);
+  }
+  ::selection {
+    background-color: var(--signal);
+    color: var(--bone);
+  }
+  /* Native scrollbar — minimal, technical */
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: var(--carbon); }
+  ::-webkit-scrollbar-thumb { background: rgba(216, 154, 72, 0.3); }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(216, 154, 72, 0.5); }
+}
+
+/* ============================================================
+   DUST//SIGNAL — Typography utilities
+   ============================================================ */
+@layer components {
+  .font-display { font-family: var(--font-display), sans-serif; }
+  .font-mono-t { font-family: var(--font-mono), monospace; }
+  .font-serif-t { font-family: var(--font-serif), serif; }
+
+  .label-t {
+    font-family: var(--font-mono), monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+    font-weight: 500;
+  }
+
+  .label-t-bright {
+    font-family: var(--font-mono), monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--amber);
+    font-weight: 500;
+  }
+
+  .headline-t {
+    font-family: var(--font-display), sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 0.95;
+    text-transform: uppercase;
+  }
+
+  .body-t {
+    font-family: var(--font-display), sans-serif;
+    font-weight: 400;
+    line-height: 1.55;
+    color: var(--dust);
+  }
+
+  .editorial-t {
+    font-family: var(--font-serif), serif;
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1.15;
+  }
+
+  .data-t {
+    font-family: var(--font-mono), monospace;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.04em;
+  }
+
+  /* One-pixel divider — the structural element of brutalist design */
+  .hairline {
+    background-color: rgba(216, 199, 169, 0.12);
+  }
+  .hairline-b { border-bottom: 1px solid rgba(216, 199, 169, 0.12); }
+  .hairline-t { border-top: 1px solid rgba(216, 199, 169, 0.12); }
+  .hairline-l { border-left: 1px solid rgba(216, 199, 169, 0.12); }
+  .hairline-r { border-right: 1px solid rgba(216, 199, 169, 0.12); }
+}
+
+/* ============================================================
+   DUST//SIGNAL — Motion utilities
+   ============================================================ */
+@layer utilities {
+  .grain-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 60;
+    opacity: 0.035;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    background-size: 200px 200px;
+  }
+
+  .vignette-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 55;
+    background: radial-gradient(ellipse at center, transparent 40%, rgba(8,8,6,0.65) 100%);
+  }
+
+  .scan-lines {
+    background-image: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(216, 199, 169, 0.02) 2px,
+      rgba(216, 199, 169, 0.02) 3px
+    );
+  }
+
+  .text-shadow-deep {
+    text-shadow: 0 0 30px rgba(8,8,6,0.95), 0 0 60px rgba(8,8,6,0.7);
+  }
+
+  .blink {
+    animation: blink 1.6s steps(2) infinite;
+  }
+  @keyframes blink {
+    0%, 50% { opacity: 1; }
+    50.01%, 100% { opacity: 0; }
+  }
+
+  .pulse-slow {
+    animation: pulseSlow 4s ease-in-out infinite;
+  }
+  @keyframes pulseSlow {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.9; }
+  }
+
+  .calibration-line {
+    position: absolute;
+    background: linear-gradient(to bottom, transparent, var(--amber), transparent);
+    width: 1px;
+    animation: calibrate 1.2s ease-out forwards;
+  }
+  @keyframes calibrate {
+    0% { transform: scaleY(0); transform-origin: top; }
+    100% { transform: scaleY(1); transform-origin: top; }
+  }
+}
+
+/* ============================================================
+   Reduced motion — strict respect
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .blink, .pulse-slow { animation: none !important; }
+}
+
+/* ============================================================
+   Custom range slider styling
+   ============================================================ */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+  height: 16px;
+}
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 1px;
+  background: rgba(216, 199, 169, 0.25);
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 10px;
+  width: 2px;
+  background: var(--amber);
+  margin-top: -5px;
+  box-shadow: 0 0 8px rgba(216, 154, 72, 0.6);
+}
+input[type="range"]::-moz-range-track {
+  height: 1px;
+  background: rgba(216, 199, 169, 0.25);
+}
+input[type="range"]::-moz-range-thumb {
+  height: 10px;
+  width: 2px;
+  background: var(--amber);
+  border: none;
+  border-radius: 0;
+  box-shadow: 0 0 8px rgba(216, 154, 72, 0.6);
+}
+input[type="range"]:focus-visible {
+  outline: 1px solid var(--amber);
+  outline-offset: 4px;
+}

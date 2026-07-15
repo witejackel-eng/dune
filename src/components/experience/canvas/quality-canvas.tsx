@@ -49,7 +49,7 @@ export function QualityCanvas({
   // Quality resolution
   const resolved =
     quality === "auto" ? device?.resolved ?? "balanced" : quality;
-  const dpr =
+  const dpr: [number, number] =
     resolved === "high" ? [1, 2] : resolved === "balanced" ? [1, 1.5] : [1, 1];
 
   if (device && !device.supportsWebGL) {

@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useRef } from "react";
 import { useCanvas2D } from "@/components/experience/hooks/use-canvas-2d";
 
 /** Small live visualization for each archive entry, used in the list. */

@@ -14,7 +14,7 @@ export function ArchivePreview({ experiments }: { experiments: Experiment[] }) {
       {experiments.map((exp, i) => (
         <Link
           key={exp.slug}
-          href="/archive"
+          href={`/archive/${exp.slug}`}
           className="col-span-12 md:col-span-4 group block"
           data-cursor="enter"
           data-cursor-label={`EXP ${exp.number}`}
@@ -131,7 +131,7 @@ function FourierRoomPreview({ seed }: { seed: number }) {
         { freq: 4, amp: 0.08, phase: Math.PI / 2, color: "rgba(164,108,59,0.4)" },
       ];
       // Individual waves (faint)
-      waves.forEach((wave, i) => {
+      waves.forEach((wave) => {
         ctx.strokeStyle = wave.color;
         ctx.lineWidth = 0.5;
         ctx.beginPath();

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" fill="none">
+  <rect width="1200" height="630" fill="#080806"/>
+  <defs>
+    <radialGradient id="atmo" cx="50%" cy="60%" r="60%">
+      <stop offset="0%" stop-color="#3A2417" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#080806" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#atmo)"/>
+  <!-- Horizontal calibration lines -->
+  <line x1="0" y1="100" x2="1200" y2="100" stroke="#D8C7A9" stroke-opacity="0.08" stroke-width="1"/>
+  <line x1="0" y1="530" x2="1200" y2="530" stroke="#D8C7A9" stroke-opacity="0.08" stroke-width="1"/>
+  <!-- Vertical axis -->
+  <line x1="600" y1="60" x2="600" y2="570" stroke="#EEE7DA" stroke-opacity="0.25" stroke-width="0.75"/>
+  <!-- Two offset arcs -->
+  <path d="M 200 460 A 400 400 0 0 1 1000 460" stroke="#D89A48" stroke-width="1.5" fill="none" opacity="0.95"/>
+  <path d="M 320 340 A 280 280 0 0 1 880 340" stroke="#D8C7A9" stroke-width="1" fill="none" opacity="0.55"/>
+  <!-- Displaced point -->
+  <circle cx="760" cy="220" r="6" fill="#A43124"/>
+  <!-- Labels -->
+  <text x="60" y="80" font-family="IBM Plex Mono, monospace" font-size="14" fill="#D8C7A9" letter-spacing="3" opacity="0.7">OBSERVATORY / 00</text>
+  <text x="1140" y="80" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="14" fill="#D8C7A9" letter-spacing="3" opacity="0.7">FIELD v1.0</text>
+  <!-- Title -->
+  <text x="60" y="320" font-family="Space Grotesk, sans-serif" font-size="78" font-weight="700" fill="#EEE7DA" letter-spacing="-2">DUST<tspan fill="#D89A48">//</tspan>SIGNAL</text>
+  <text x="60" y="370" font-family="Instrument Serif, serif" font-style="italic" font-size="32" fill="#D8C7A9">Probability has a pulse.</text>
+  <!-- Bottom meta -->
+  <text x="60" y="580" font-family="IBM Plex Mono, monospace" font-size="11" fill="#8a7d63" letter-spacing="2">SEED · 0x4D535F47 · 124 BPM · LAT 32.7°N</text>
+  <text x="1140" y="580" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11" fill="#8a7d63" letter-spacing="2">A COMPUTATIONAL OBSERVATORY</text>
+</svg>

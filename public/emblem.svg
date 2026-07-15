@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!--
+    DUST//SIGNAL original emblem
+    Composition: two offset arcs, one vertical measurement axis, one displaced point.
+    Suggests orbit + probability distribution + phase shift + signal crossing horizon.
+    No triangles, no eye, no crest, no faction logo.
+  -->
+  <rect width="64" height="64" fill="#080806"/>
+  <!-- Outer arc — wider orbit -->
+  <path d="M 8 44 A 24 24 0 0 1 56 44" stroke="#D89A48" stroke-width="1" fill="none" opacity="0.95"/>
+  <!-- Inner arc — phase-shifted, offset down-left -->
+  <path d="M 14 30 A 16 16 0 0 1 46 30" stroke="#D8C7A9" stroke-width="1" fill="none" opacity="0.6"/>
+  <!-- Vertical measurement axis -->
+  <line x1="32" y1="6" x2="32" y2="58" stroke="#EEE7DA" stroke-width="0.75" opacity="0.5"/>
+  <!-- Tick marks on axis -->
+  <line x1="29" y1="14" x2="35" y2="14" stroke="#EEE7DA" stroke-width="0.5" opacity="0.35"/>
+  <line x1="29" y1="32" x2="35" y2="32" stroke="#EEE7DA" stroke-width="0.5" opacity="0.35"/>
+  <line x1="29" y1="50" x2="35" y2="50" stroke="#EEE7DA" stroke-width="0.5" opacity="0.35"/>
+  <!-- Displaced point — off the axis, signals crossing -->
+  <circle cx="42" cy="20" r="1.6" fill="#A43124"/>
+  <!-- Horizon line -->
+  <line x1="6" y1="58" x2="58" y2="58" stroke="#3A2417" stroke-width="0.75"/>
+</svg>

@@ -1,7 +1,6 @@
 "use client";
 
 import { useCanvas2D } from "@/components/experience/hooks/use-canvas-2d";
-import { useAudio } from "@/components/experience/audio/audio-provider";
 
 /**
  * Brief §9 Section 5: 16-column rhythmic grid. As visitor scrolls (or here, time progresses),
@@ -11,8 +10,6 @@ import { useAudio } from "@/components/experience/audio/audio-provider";
  * When audio is enabled, link visual pulses to audio.trigger("pulse", time) calls on a schedule.
  */
 export function RhythmArchitecture() {
-  const audio = useAudio();
-
   const canvas = useCanvas2D(
     (ctx, w, h, t) => {
       ctx.clearRect(0, 0, w, h);

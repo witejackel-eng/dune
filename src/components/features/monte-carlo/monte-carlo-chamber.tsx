@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useRef, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { useCanvas2D } from "@/components/experience/hooks/use-canvas-2d";
 import {
   ParameterSlider,

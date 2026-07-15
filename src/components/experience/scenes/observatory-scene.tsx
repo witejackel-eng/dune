@@ -143,7 +143,6 @@ export function ObservatoryScene({ far }: { far?: boolean }) {
       for (let l = 0; l < layers; l++) {
         const depth = (l + 1) / layers;
         const layerY = h * (0.55 + l * 0.07);
-        const amplitude = 18 + l * 8;
         const colorMix = Math.floor(8 + l * 4);
         ctx.fillStyle = `rgb(${colorMix + 8},${colorMix + 4},${colorMix})`;
         ctx.beginPath();

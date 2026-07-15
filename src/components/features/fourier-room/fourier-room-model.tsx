@@ -49,7 +49,7 @@ export function FourierRoomModel() {
 
   // Combined + individual waves
   const wavesCanvas = useCanvas2D(
-    (ctx, w, h, t) => {
+    (ctx, w, h) => {
       ctx.clearRect(0, 0, w, h);
       const cy = h / 2;
       const pad = 12;

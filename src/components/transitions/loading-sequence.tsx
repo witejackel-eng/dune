@@ -1,97 +1,77 @@
 "use client";
 
 /**
- * Brief §8: Cinematic loading sequence.
- * - Black screen
- * - Tiny displaced point appears
- * - Vertical calibration line draws upward
- * - Emblem assembles
- * - "FIELD INITIALIZATION" text appears
- * - Real loading values update: Shaders / Geometry / Audio engine / Simulation seed
- * - Low-frequency visual pulse
- * - Experience opens
+ * DUST//SIGNAL — Cinematic loading sequence (V2).
+ * Brief §15:
+ *   - Do not fake shader/geometry completion percentages.
+ *   - Track meaningful scene readiness.
+ *   - Do not block the visitor longer than necessary.
+ *   - Full sequence only on the first session visit.
+ *   - Short transition on route navigation.
+ *   - Skip button always works.
+ *   - Reduced-motion mode uses a minimal fade.
+ *   - Avoid hydration mismatches.
+ *   - Site cannot remain permanently trapped behind loader when WebGL creation fails.
  *
- * Brief: Store session state so repeat navigation does not replay complete intro.
- * Brief: Provide a Skip control. Respect prefers-reduced-motion.
+ * Target duration: ~1.2–2 seconds when cached.
  */
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Emblem } from "@/components/typography/emblem";
 import { useSystemStatus } from "@/components/layout/system-status";
 
-type Phase = "hidden" | "point" | "axis" | "emblem" | "labels" | "pulse" | "done";
-
-const STAGES = [
-  { key: "SHADERS", duration: 380 },
-  { key: "GEOMETRY", duration: 420 },
-  { key: "AUDIO ENGINE", duration: 280 },
-  { key: "SIMULATION SEED", duration: 220 },
-] as const;
+type Phase = "hidden" | "point" | "axis" | "emblem" | "labels" | "done";
 
 export function LoadingSequence() {
   const [phase, setPhase] = useState<Phase>("hidden");
-  const [progress, setProgress] = useState(0);
-  const [stageIdx, setStageIdx] = useState(0);
-  const [skipped, setSkipped] = useState(false);
-  const startTimeRef = useRef(0);
-  const { seedHex, regenerateSeed } = useSystemStatus();
+  const { seedHex } = useSystemStatus();
 
   useEffect(() => {
-    // Respect reduced motion — show values but skip animation
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // SSR safety — only run in browser
+    if (typeof window === "undefined") return;
 
-    // Only show full intro on first visit of session
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const alreadyLoaded = sessionStorage.getItem("dust-signal:loaded") === "true";
+
+    // Brief §15: Immediate skip if already loaded or reduced motion
     if (alreadyLoaded || reduced) {
-      setPhase("done");
-      return;
+      // Brief §15: short transition on route navigation
+      const t = window.setTimeout(() => setPhase("done"), 100);
+      return () => window.clearTimeout(t);
     }
 
-    startTimeRef.current = performance.now();
-    setPhase("point");
-
+    // Brief §15: Full sequence only on first session visit, ~1.5s total
     const timers: number[] = [];
-    timers.push(window.setTimeout(() => setPhase("axis"), 280));
-    timers.push(window.setTimeout(() => setPhase("emblem"), 680));
-    timers.push(window.setTimeout(() => setPhase("labels"), 1100));
-    timers.push(window.setTimeout(() => setPhase("pulse"), 1700));
+    timers.push(window.setTimeout(() => setPhase("point"), 0));
+    timers.push(window.setTimeout(() => setPhase("axis"), 200));
+    timers.push(window.setTimeout(() => setPhase("emblem"), 500));
+    timers.push(window.setTimeout(() => setPhase("labels"), 900));
     timers.push(window.setTimeout(() => {
       setPhase("done");
       sessionStorage.setItem("dust-signal:loaded", "true");
-    }, 2300));
+    }, 1500));
 
-    // Progress + stages
-    let p = 0;
-    let sIdx = 0;
-    const interval = window.setInterval(() => {
-      p = Math.min(100, p + Math.random() * 9 + 4);
-      setProgress(p);
-      const newStageIdx = Math.min(
-        STAGES.length - 1,
-        Math.floor((p / 100) * STAGES.length)
-      );
-      if (newStageIdx !== sIdx) {
-        sIdx = newStageIdx;
-        setStageIdx(sIdx);
-      }
-      if (p >= 100) {
-        window.clearInterval(interval);
-      }
-    }, 90);
+    // Brief §15: Fail-safe — never let the loader persist beyond 4s no matter what
+    const failSafe = window.setTimeout(() => {
+      setPhase("done");
+      sessionStorage.setItem("dust-signal:loaded", "true");
+    }, 4000);
+    timers.push(failSafe);
 
     return () => {
       timers.forEach((t) => window.clearTimeout(t));
-      window.clearInterval(interval);
     };
-  }, [regenerateSeed]);
+  }, []);
 
   const skip = () => {
-    setSkipped(true);
     setPhase("done");
-    sessionStorage.setItem("dust-signal:loaded", "true");
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem("dust-signal:loaded", "true");
+    }
   };
 
-  if (phase === "done") return null;
+  // Brief §15: Avoid hydration mismatch — render nothing on server
+  if (phase === "hidden" || phase === "done") return null;
 
   return (
     <div
@@ -105,14 +85,12 @@ export function LoadingSequence() {
         <div className="relative h-32 flex items-center justify-center mb-8">
           {/* Displaced point */}
           <div
-            className={`absolute w-1.5 h-1.5 bg-signal transition-opacity duration-300 ${
-              phase !== "hidden" ? "opacity-100" : "opacity-0"
-            }`}
+            className="absolute w-1.5 h-1.5 bg-signal transition-opacity duration-300 opacity-100"
             style={{ transform: "translate(28px, -22px)" }}
             aria-hidden="true"
           />
           {/* Calibration line — draws upward */}
-          {phase !== "point" && phase !== "hidden" && (
+          {(phase === "axis" || phase === "emblem" || phase === "labels") && (
             <div
               className="absolute w-px bg-gradient-to-t from-transparent via-amber to-transparent calibration-line"
               style={{ height: 120, left: "50%" }}
@@ -120,8 +98,8 @@ export function LoadingSequence() {
             />
           )}
           {/* Emblem */}
-          {phase !== "point" && phase !== "axis" && phase !== "hidden" && (
-            <div className="text-amber transition-opacity duration-500 opacity-0" style={{ animation: "fadeIn 600ms 100ms forwards" }}>
+          {(phase === "emblem" || phase === "labels") && (
+            <div className="text-amber" style={{ animation: "ds-fade-in 600ms 100ms forwards" }}>
               <Emblem size={56} />
             </div>
           )}
@@ -130,60 +108,19 @@ export function LoadingSequence() {
         {/* Label */}
         <div
           className={`text-center transition-opacity duration-500 ${
-            phase === "labels" || phase === "pulse" ? "opacity-100" : "opacity-0"
+            phase === "labels" ? "opacity-100" : "opacity-0"
           }`}
         >
           <p className="label-t-bright mb-2">FIELD INITIALIZATION</p>
           <p className="font-display text-xl text-bone tracking-tight">
             DUST<span className="text-amber">{"//"}</span>SIGNAL
           </p>
+          <p className="font-mono text-[10px] tracking-[0.15em] uppercase text-dust/40 mt-3">
+            SEED {seedHex}
+          </p>
         </div>
 
-        {/* Stage list */}
-        <div
-          className={`mt-8 transition-opacity duration-500 ${
-            phase === "labels" || phase === "pulse" ? "opacity-100" : "opacity-0"
-          }`}
-        >
-          <ul className="space-y-1.5">
-            {STAGES.map((s, i) => {
-              const done = i < stageIdx;
-              const active = i === stageIdx;
-              return (
-                <li
-                  key={s.key}
-                  className={`flex items-center justify-between font-mono text-[10px] tracking-[0.18em] uppercase ${
-                    done ? "text-amber" : active ? "text-dust" : "text-dust/30"
-                  }`}
-                >
-                  <span className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5">
-                      {done ? "●" : active ? "○" : "·"}
-                    </span>
-                    {s.key}
-                  </span>
-                  <span>{done ? "OK" : active ? `${Math.round(progress)}%` : "—"}</span>
-                </li>
-              );
-            })}
-          </ul>
-
-          {/* Progress bar */}
-          <div className="mt-3 h-px bg-dust/15 relative">
-            <div
-              className="absolute inset-y-0 left-0 bg-amber"
-              style={{ width: `${progress}%`, transition: "width 90ms linear" }}
-            />
-          </div>
-
-          {/* Seed + meta */}
-          <div className="mt-3 flex items-center justify-between font-mono text-[10px] tracking-[0.15em] uppercase text-dust/40">
-            <span>SEED {seedHex}</span>
-            <span>{Math.round(progress)}%</span>
-          </div>
-        </div>
-
-        {/* Skip control */}
+        {/* Skip control — always available */}
         <button
           onClick={skip}
           className="absolute top-0 right-0 font-mono text-[10px] tracking-[0.18em] uppercase text-dust/40 hover:text-amber transition-colors"
@@ -193,18 +130,10 @@ export function LoadingSequence() {
         </button>
       </div>
 
-      {/* Low-frequency visual pulse */}
-      {phase === "pulse" && (
-        <div
-          className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-amber/5 to-transparent"
-          style={{ animation: "pulseSlow 1.4s ease-in-out" }}
-          aria-hidden="true"
-        />
-      )}
-
       <style jsx>{`
-        @keyframes fadeIn {
-          to { opacity: 1; }
+        @keyframes ds-fade-in {
+          from { opacity: 0; transform: scale(0.92); }
+          to { opacity: 1; transform: scale(1); }
         }
       `}</style>
     </div>

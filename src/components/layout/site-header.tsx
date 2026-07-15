@@ -31,6 +31,22 @@ export function SiteHeader() {
     setMenuOpen(false);
   }, [pathname]);
 
+  // Brief §14: Body scroll lock while menu is open + Escape to close
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.style.overflow = "hidden";
+      const onKey = (e: KeyboardEvent) => {
+        if (e.key === "Escape") setMenuOpen(false);
+      };
+      document.addEventListener("keydown", onKey);
+      return () => {
+        document.body.style.overflow = "";
+        document.removeEventListener("keydown", onKey);
+      };
+    }
+    return undefined;
+  }, [menuOpen]);
+
   // Keep system status in sync with audio
   useEffect(() => {
     status.setAudioState({

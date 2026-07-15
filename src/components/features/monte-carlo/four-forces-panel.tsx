@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import { FOUR_FORCES } from "@/content/site-content";
 import { useCanvas2D } from "@/components/experience/hooks/use-canvas-2d";
-import { simulateGBM, lissajous, terrainHeight } from "@/lib/math";
+import { simulateGBM, terrainHeight } from "@/lib/math";
 import { mulberry32 } from "@/lib/seeded-random";
 import { useSystemStatus } from "@/components/layout/system-status";
 
